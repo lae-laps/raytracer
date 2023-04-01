@@ -3,35 +3,17 @@
 #ifndef RENDER_HPP
 #define RENDER_HPP
 
-#include <iostream>
+#include "../ray/ray.hpp"
+#include "../math/math.hpp"
+#include "../objects/hittable/hittable.hpp"
 
-class Render {
-	private:
-		unsigned int *matrix;  // 3D array for rows, columns & RGB is compressed down into a 1D array
-
-	protected:
-		int offset(int, int);
-		int offset(int, int, int);
-
-		std::string generate_headers();
-
-	public:
-		unsigned int width;
-		unsigned int height;
-		unsigned int color_depth;
-
-		Render(int width, int height, int color_depth);	
-		~Render();
-
-		int write_to_file(std::string);
-
-		void set_pos(int, int, double val[]);
-		void set_pos(int, int, unsigned int val[]);
-		void set_pos(int, int, int, double);
-		void set_pos(int, int, int, unsigned int);
-
-		void debug_matrix();
-};
+color render_color(const ray &r, const hittable &world) {
+    hit_record rec;
+    if (world.hit(r, 0, infinity, rec)) {
+		return 0.5 * (rec.normal + color(1,1,1));
+	}
+	return r.get_background_pixel();
+}
 
 #endif
 

@@ -71,11 +71,11 @@ inline vec3 operator*(const val t, const vec3 &u) {
 }
 
 inline vec3 operator*(const vec3 &u, const val t) {
-	return t * u;
+	return vec3(t * u.x, t * u.y, t * u.z);
 }
 
 inline vec3 operator/(const vec3 &u, const val t) {
-	return (1 / t) * u;
+	return static_cast<val>(1.0 / t) * u;
 }
 
 inline val dot(const vec3 &u, const vec3 &v) {
@@ -90,7 +90,7 @@ inline vec3 cross(const vec3 &u, const vec3 &v) {
 				u.x * v.y - u.y * v.x);
 }
 
-inline vec3 unit_vec(const vec3 v) {
+inline vec3 normalise(const vec3 v) {
 	return v / v.length();
 }
 

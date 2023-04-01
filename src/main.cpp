@@ -3,23 +3,32 @@
 #include <iostream>
 
 #include "io/io.hpp"
+#include "global.hpp"
 #include "ray/ray.hpp"
+#include "math/math.hpp"
 #include "vec3/vec3.hpp"
 #include "render/render.hpp"
-#include "global_collection.hpp"
+#include "filewriter/filewriter.hpp"
+#include "objects/sphere/sphere.hpp"
 #include "objects/collection/collection.hpp"
-
-Collection collection;
 
 int main() {
 
-	int width = 1600;
-	int height = 9000;
+	// create objects
 
-	Render render(WIDTH, HEIGHT, COLOR_DEPTH);
+	collection world;
+	world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
+	world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+	world.add(make_shared<sphere>(point3(0, 0, -0.4), 0.1));
+	world.add(make_shared<sphere>(point3(-0.7, 0, -1), 0.2));
+	world.add(make_shared<sphere>(point3(0.7, 0, -1), 0.2));
+
+	// set camera and viewport
+
+	Filewriter filewriter(WIDTH, HEIGHT, COLOR_DEPTH);
 
 	val viewport_height = 2.0;
-	val viewport_width = aspect_ratio * viewport_height;
+	val viewport_width = static_cast<val>(viewport_height) * aspect_ratio;
 	val focal_length = 1.0;
 
 	point3 origin(0, 0, 0);
@@ -27,23 +36,22 @@ int main() {
 	vec3 vertical(0, viewport_height, 0);
 	vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length);
 
-	sphere test(0.3, point3(0.0, 0.0, -1.0));
-	collection.add_sphere(test);
+	// render
 
-	for (int j = height - 1; j >= 0; --j) {
-		for (int i = 0; i < width; ++i) {
-			val u = (val)(i) / (width - 1);
-			val v = (val)(j) / (height - 1);
+	for (unsigned int j = 0; j < HEIGHT; ++j) {
+		for (unsigned int i = 0; i < WIDTH; ++i) {
+			val u = (val)(i) / (WIDTH - 1);
+			val v = (val)(j) / (HEIGHT - 1);
 			ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-			color pixel = r.pixel_color();
+			color pixel = render_color(r, world);
 			val rgb[] = {pixel.x, pixel.y, pixel.z};
-			render.set_pos(i, j, rgb);
+			filewriter.set_pos(i, j, rgb);
 		}
 	}
 
 	//image.debug_matrix(); 
 
-	int err = render.write_to_file("images/render3.ppm");
+	int err = filewriter.write_to_file("images/render3.ppm");
 	if (err != 0) {
 		std::cout << "write to file with exit code : " << err << std::endl;
 	}

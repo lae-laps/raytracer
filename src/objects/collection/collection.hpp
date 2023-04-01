@@ -3,16 +3,26 @@
 #ifndef COLLECTION_HPP
 #define COLLECTION_HPP
 
-#include "../sphere/sphere.hpp"
+#include <memory>
+#include <vector>
 
-class Collection {
+#include "../hittable/hittable.hpp"
+
+using std::shared_ptr;
+using std::make_shared;
+
+class collection : public hittable {
 	public:
-		sphere *spheres;
-		unsigned int sphere_count;
 
-		Collection();
+		std::vector<shared_ptr<hittable>> objects;
 
-		void add_sphere(sphere s);
+		collection() {}
+        collection(shared_ptr<hittable> object);
+
+		void clear();
+        void add(shared_ptr<hittable>);
+
+		virtual bool hit(const ray &r, const val t_min, const val t_max, hit_record &rec) const override;
 };
 
 #endif
