@@ -38,13 +38,15 @@ int Filewriter::write_to_file(std::string path) {
 	struct stat buf;
 	if (stat(path.c_str(), &buf) != -1) {
 		//throw_warning("file [" + path + "] already exists");
-		std::cout << "overwrite? [y/n]> ";
-		std::string check = input();
-		if (check != "y" and check != "Y") {
-			return 0;	
+		if (ASK_TO_OVERWRITE) {
+			std::cout << "overwrite? [y/n]> ";
+			std::string check = input();
+			if (check != "y" and check != "Y") {
+				return 0;	
+			}
+			// overwrite contents in file
+			check.clear();
 		}
-		// overwrite contents in file
-		check.clear();
 		std::ofstream ofs;
 		ofs.open(path, std::ofstream::out | std::ofstream::trunc);
 		ofs.close();

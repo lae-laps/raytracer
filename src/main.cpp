@@ -25,8 +25,6 @@ int main() {
 
 	// set camera and viewport
 
-	Filewriter filewriter(WIDTH, HEIGHT, COLOR_DEPTH);
-
 	val viewport_height = 2.0;
 	val viewport_width = static_cast<val>(viewport_height) * aspect_ratio;
 	val focal_length = 1.0;
@@ -35,6 +33,10 @@ int main() {
 	vec3 horizontal(viewport_width, 0, 0);
 	vec3 vertical(0, viewport_height, 0);
 	vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length);
+
+	// set filewriter handler to render image
+
+	Filewriter image(WIDTH, HEIGHT, COLOR_DEPTH);
 
 	// render
 
@@ -45,13 +47,13 @@ int main() {
 			ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
 			color pixel = render_color(r, world);
 			val rgb[] = {pixel.x, pixel.y, pixel.z};
-			filewriter.set_pos(i, j, rgb);
+			image.set_pos(i, j, rgb);
 		}
 	}
 
 	//image.debug_matrix(); 
 
-	int err = filewriter.write_to_file("images/render3.ppm");
+	int err = image.write_to_file("images/render3.ppm");
 	if (err != 0) {
 		std::cout << "write to file with exit code : " << err << std::endl;
 	}
