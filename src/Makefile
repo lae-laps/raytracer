@@ -3,8 +3,8 @@ CFLAGS = -g -Wall
 TARGET = main
 BUILDDIR = build/
 
-all: main.o io.o render.o vec3.o ray.o point.o color.o
-	$(CC) $(CFLAGS) -o $(TARGET) $(BUILDDIR)*
+all: main.o collection.o io.o render.o vec3.o ray.o
+	$(CC) $(CFLAGS) -o $(TARGET) $(BUILDDIR)main.o $(BUILDDIR)collection.o $(BUILDDIR)io.o $(BUILDDIR)render.o $(BUILDDIR)vec3.o $(BUILDDIR)ray.o
 
 main.o:
 	$(CC) $(CFLAGS) -c main.cpp -o $(BUILDDIR)main.o
@@ -21,11 +21,8 @@ vec3.o:
 ray.o:
 	$(CC) $(CFLAGS) -c ray/ray.cpp -o $(BUILDDIR)ray.o
 
-point.o:
-	$(CC) $(CFLAGS) -c point/point.cpp -o $(BUILDDIR)point.o
-
-color.o:
-	$(CC) $(CFLAGS) -c color/color.cpp -o $(BUILDDIR)color.o
+collection.o:
+	$(CC) $(CFLAGS) -c objects/collection/collection.cpp -o $(BUILDDIR)collection.o
 
 clean:
 	$(RM) $(BUILDDIR)*.o $(TARGET)

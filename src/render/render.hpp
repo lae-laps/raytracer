@@ -18,8 +18,9 @@ class Render {
 	public:
 		unsigned int width;
 		unsigned int height;
+		unsigned int color_depth;
 
-		Render(int width, int height);	
+		Render(int width, int height, int color_depth);	
 		~Render();
 
 		int write_to_file(std::string);

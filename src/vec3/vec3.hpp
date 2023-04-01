@@ -18,6 +18,7 @@ class vec3 {
 		val y;
 		val z;
 
+		vec3() : x(0), y(0), z(0) {}
 		vec3(val, val, val);
 
 		vec3  operator-() const;
@@ -41,6 +42,11 @@ class vec3 {
 };
 
 #endif
+
+// aliases for vec3
+
+using point3 = vec3;	// A 3-dimensional point
+using color  = vec3;	// vectorial RGB color space
 
 // vec3 utility functions
 

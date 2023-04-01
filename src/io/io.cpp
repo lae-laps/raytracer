@@ -26,6 +26,10 @@ void throw_warning(std::string text) {
 	std::cout << (text) << std::endl;
 }
 
+void throw_error(std::string text) {
+	print("error: ", 1);
+	std::cout << (text) << std::endl;
+}
 
 void throw_encoding_error(std::string text) {
 	print("encoding error: ", 5);

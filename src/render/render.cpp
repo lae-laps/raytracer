@@ -9,9 +9,10 @@
 #include "../io/io.hpp"
 #include "../global.hpp"
 
-Render::Render(int a, int b) {
+Render::Render(int a, int b, int c) {
 	width = a;
 	height = b;
+	color_depth = c;
 
 	matrix = new unsigned int[3 * width * height]();			// () after expr zeroe's the data
 
@@ -79,56 +80,56 @@ std::string Render::generate_headers() {
 	std::string headers;
 	headers += "P3\n";														// set magic numbers ; TODO: make this scalable
 	headers += std::to_string(width) + " " + std::to_string(height) + "\n";	// set width and height
-	headers += std::to_string(COLOR_DEPTH) + "\n";							// set color depth
+	headers += std::to_string(color_depth) + "\n";							// set color depth
 	return headers;
 }
 
-void Render::set_pos(int x, int y, unsigned int val[]) {
+void Render::set_pos(int x, int y, unsigned int r[]) {
 	int n = offset(x, y);
 
 	for (int i = 0; i < 3; i ++) {
-		if (val[i] > COLOR_DEPTH) {
-			throw_encoding_error("value " + std::to_string(val[i]) + " too large at position (" + std::to_string(x) + ", " + std::to_string(y) + ")");
+		if (r[i] > color_depth) {
+			throw_encoding_error("value " + std::to_string(r[i]) + " too large at position (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 		}
-		matrix[n + i] = val[i];
+		matrix[n + i] = r[i];
 	}
 }
 
-void Render::set_pos(int x, int y, double val[]) {
+void Render::set_pos(int x, int y, val n[]) {
 
 	for (int h = 0; h < 3; h++) {
-		if (val[h] > 1.0) {
-			throw_encoding_error("decimal value " + std::to_string(val[h]) + " exceeds 1.0 (" + std::to_string(x) + ", " + std::to_string(y) + ")");
+		if (n[h] > 1.0) {
+			throw_encoding_error("decimal value " + std::to_string(n[h]) + " exceeds 1.0 (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 		}
 	}
 	
-	double f = double(COLOR_DEPTH) + 0.999;
+	double f = double(color_depth) + 0.999;
 
 	unsigned int rgb[] = {
-		static_cast<unsigned int>(f * val[0]),
-		static_cast<unsigned int>(f * val[1]),
-		static_cast<unsigned int>(f * val[2]),
+		static_cast<unsigned int>(f * n[0]),
+		static_cast<unsigned int>(f * n[1]),
+		static_cast<unsigned int>(f * n[2]),
 	};
 
-	int n = offset(x, y);
+	int r = offset(x, y);
 
 	for (int i = 0; i < 3; i ++) {
-		matrix[n + i] = rgb[i];
+		matrix[r + i] = rgb[i];
 	}
 }
 
-void Render::set_pos(int x, int y, int z, unsigned int val) {
-	if (val > COLOR_DEPTH) {
-		throw_encoding_error("value " + std::to_string(val) + " too large at position (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")");
+void Render::set_pos(int x, int y, int z, unsigned int n) {
+	if (n > color_depth) {
+		throw_encoding_error("value " + std::to_string(n) + " too large at position (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")");
 	}
-	matrix[offset(x, y, z)] = val;
+	matrix[offset(x, y, z)] = n;
 }
 
-void Render::set_pos(int x, int y, int z, double val) {
-	if (val > 1.0) {
-		throw_encoding_error("decimal value " + std::to_string(val) + " exceeds 1.0 (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")");
+void Render::set_pos(int x, int y, int z, val n) {
+	if (n > 1.0) {
+		throw_encoding_error("decimal value " + std::to_string(n) + " exceeds 1.0 (" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")");
 	}
-	matrix[offset(x, y, z)] = static_cast<unsigned int>((COLOR_DEPTH + 0.999) * val);
+	matrix[offset(x, y, z)] = static_cast<unsigned int>((color_depth + 0.999) * n);
 }
 
 int Render::offset(int x, int y) {
