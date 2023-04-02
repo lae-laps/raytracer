@@ -11,6 +11,8 @@ class ray {
 		point3 origin;
 		vec3 direction;
 
+		ray() {}
+
 		ray(const point3 &p, const vec3 &q);
 		
 		point3 at(val t) const;	

@@ -6,10 +6,11 @@
 #include <memory>
 #include <vector>
 
+#include "../hit.hpp"
 #include "../hittable/hittable.hpp"
+#include "../../render/mat_struct.hpp"
 
 using std::shared_ptr;
-using std::make_shared;
 
 class collection : public hittable {
 	public:
@@ -22,7 +23,8 @@ class collection : public hittable {
 		void clear();
         void add(shared_ptr<hittable>);
 
-		virtual bool hit(const ray &r, const val t_min, const val t_max, hit_record &rec) const override;
+		virtual bool hit(const ray &r, const val t_min, const val t_max, class hit rec, mat_struct &m) const override;
+
 };
 
 #endif

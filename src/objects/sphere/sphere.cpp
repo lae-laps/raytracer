@@ -1,8 +1,19 @@
+#include "../hit.hpp"
 #include "sphere.hpp"
 
 #include <cmath>
+#include <memory>
 
-bool sphere::hit(const ray &r, const val t_min, const val t_max, hit_record &rec) const {
+using std::shared_ptr;
+
+sphere::sphere(point3 b, val a, material n) {
+	center = b;
+	radius = a;
+	mat = n;
+}
+
+bool sphere::hit(const ray &r, const val t_min, const val t_max, class hit rec, shared_ptr<material> m) const {
+
 	vec3 oc = r.origin - center;
 	auto a = r.direction.length_squared();
 	auto half_b = dot(oc, r.direction);
@@ -24,6 +35,7 @@ bool sphere::hit(const ray &r, const val t_min, const val t_max, hit_record &rec
     rec.p = r.at(rec.t);
 	vec3 outward_normal = (rec.p - center) / radius;
 	rec.set_face_normal(r, outward_normal);
+	//rec.mat_ptr = material_ptr;
 
     return true;
 }

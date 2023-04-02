@@ -1,5 +1,6 @@
 // Raytracer
 
+#include <memory>
 #include <iostream>
 
 #include "io/io.hpp"
@@ -7,32 +8,51 @@
 #include "ray/ray.hpp"
 #include "math/math.hpp"
 #include "vec3/vec3.hpp"
+#include "camera/camera.hpp"
 #include "render/render.hpp"
+#include "render/mat_struct.hpp"
+#include "materials/metal/metal.hpp"
 #include "filewriter/filewriter.hpp"
 #include "objects/sphere/sphere.hpp"
+#include "materials/material/material.hpp"
 #include "objects/collection/collection.hpp"
+#include "materials/lambertian/lambertian.hpp"
+
+using std::make_shared;
 
 int main() {
+
+	std::cout << "Rendering" << std::endl;
+
+	// seed the random number generator
+	
+	srand(time(NULL));
 
 	// create objects
 
 	collection world;
-	world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
-	world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
-	world.add(make_shared<sphere>(point3(0, 0, -0.4), 0.1));
-	world.add(make_shared<sphere>(point3(-0.7, 0, -1), 0.2));
-	world.add(make_shared<sphere>(point3(0.7, 0, -1), 0.2));
 
-	// set camera and viewport
 
-	val viewport_height = 2.0;
-	val viewport_width = static_cast<val>(viewport_height) * aspect_ratio;
-	val focal_length = 1.0;
+	auto material_ground = make_shared<lambertian>((color(0.8, 0.8, 0.0)));
+	auto material_center = make_shared<lambertian>((color(0.7, 0.3, 0.3)));
+	auto material_left   = make_shared<metal>((color(0.8, 0.8, 0.8)));
+	auto material_right  = make_shared<metal>((color(0.8, 0.6, 0.2)));
 
-	point3 origin(0, 0, 0);
-	vec3 horizontal(viewport_width, 0, 0);
-	vec3 vertical(0, viewport_height, 0);
-	vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length);
+	world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
+	world.add(make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_center));
+	world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
+	world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
+
+	mat_struct base {};
+	base.c = lambertian(color(0.0, 0.5, 1.0));
+
+	/*for (int m = 0; m < 150; m++) {
+		world.add(make_shared<sphere>(point3(random_val(-10, 10), random_val(-10, 10), random_val(-8, -60)), random_val(0.2, 4)));
+	}*/
+
+	// set camera
+	
+	Camera cam;
 
 	// set filewriter handler to render image
 
@@ -42,10 +62,14 @@ int main() {
 
 	for (unsigned int j = 0; j < HEIGHT; ++j) {
 		for (unsigned int i = 0; i < WIDTH; ++i) {
-			val u = (val)(i) / (WIDTH - 1);
-			val v = (val)(j) / (HEIGHT - 1);
-			ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-			color pixel = render_color(r, world);
+			color pixel(0, 0, 0);
+			for (unsigned int s = 0; s < samples_per_pixel; ++s) {
+				val u = (i + random_val()) / (WIDTH - 1);
+				val v = (j + random_val()) / (HEIGHT - 1);
+				ray r = cam.get_ray(u, v);
+				pixel += render_color(r, world, cycles, base);
+			}
+			pixel = even_color(pixel);
 			val rgb[] = {pixel.x, pixel.y, pixel.z};
 			image.set_pos(i, j, rgb);
 		}
@@ -53,7 +77,7 @@ int main() {
 
 	//image.debug_matrix(); 
 
-	int err = image.write_to_file("images/render3.ppm");
+	int err = image.write_to_file("images/render.ppm");
 	if (err != 0) {
 		std::cout << "write to file with exit code : " << err << std::endl;
 	}

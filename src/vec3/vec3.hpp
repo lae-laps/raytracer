@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "../global.hpp"
+#include "../utils/utils.hpp"
 
 #define ZERO_RANGE 1e-8
 
@@ -32,12 +33,14 @@ class vec3 {
 
 		bool near_zero() const;				// check if is in a range near to 0
 
-		inline static vec3 random();
-		inline static vec3 random(val, val);
 
-	protected:
-		static val random_val();
-		static val random_val(val, val);
+		inline static vec3 random() {
+			return vec3(random_val(), random_val(), random_val());
+		}
+
+		inline static vec3 random(val min, val max) {
+			return vec3(random_val(min, max), random_val(min, max), random_val(min, max));
+		}
 
 };
 
@@ -92,5 +95,32 @@ inline vec3 cross(const vec3 &u, const vec3 &v) {
 
 inline vec3 normalise(const vec3 v) {
 	return v / v.length();
+}
+
+inline vec3 random_unit_sphere() {
+    while (true) {
+		vec3 p = vec3::random(-1,1);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
+
+inline vec3 random_unit_vector() {
+	return normalise(random_unit_sphere());
+}
+
+inline vec3 random_in_hemisphere(const vec3& normal) {
+	vec3 in_unit_sphere = random_unit_sphere();
+	if (dot(in_unit_sphere, normal) > 0.0) {
+		// same hemisphere as the normal
+		return in_unit_sphere;
+	} else {
+		// opposite hemisphere so we return the negative
+		return -in_unit_sphere;
+	}
+}
+
+inline vec3 reflect(const vec3 &v, const vec3 &normal) {
+	return v - 2 * dot(v, normal) * normal;					// calculate reflected vector using snells law
 }
 
