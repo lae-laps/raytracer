@@ -7,7 +7,6 @@
 #include "../../global.hpp"
 #include "../../ray/ray.hpp"
 #include "../../vec3/vec3.hpp"
-#include "../../render/mat_struct.hpp"
 #include "../../materials/material/material.hpp"
 
 #include <memory>

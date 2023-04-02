@@ -1,4 +1,9 @@
+#include <memory>
+
 #include "collection.hpp"
+
+using std::shared_ptr;
+using std::make_shared;
 
 collection::collection(shared_ptr<hittable> object) {
 	add(object);
@@ -12,7 +17,7 @@ void collection::add(shared_ptr<hittable> object) {
 	objects.push_back(object); 
 }
 
-bool collection::hit(const ray& r, double t_min, double t_max, class hit rec, mat_struct &m) const {
+bool collection::hit(const ray& r, double t_min, double t_max, class hit rec, shared_ptr<material> m) const {
     class hit tmp;
     bool hit_anything = false;
     val closest = t_max;
@@ -23,7 +28,7 @@ bool collection::hit(const ray& r, double t_min, double t_max, class hit rec, ma
 			hit_anything = true;
 			closest = tmp.t;
 
-			m.c = object->mat;
+			m = make_shared<material>(object->mat);
 
 			rec = tmp;
 		}

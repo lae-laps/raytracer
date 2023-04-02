@@ -4,6 +4,7 @@
 #define RENDER_HPP
 
 #include <cmath>
+#include <memory>
 
 #include "../ray/ray.hpp"
 #include "../math/math.hpp"
@@ -15,16 +16,22 @@
 #include "../materials/material/material.hpp"
 #include "../materials/lambertian/lambertian.hpp"
 
-inline color render_color(const ray &r, const hittable &world, const unsigned int iterations, mat_struct &m) {
+using std::shared_ptr;
+
+inline color render_color(const ray &r, const hittable &world, const unsigned int iterations, shared_ptr<material> m) {
     hit rec;
 
 	if (iterations <= 0) {
 		return color(0, 0, 0);
 	}
 
+	std::cout << "got to 1" << std::endl;
+
 	//material m;
 
     if (world.hit(r, shadow_acne_threshold, infinity, rec, m)) {
+
+		std::cout << "got to 2" << std::endl;
 
 		//return 0.5 * (rec.normal + color(1,1,1));						// convert surface normal to RGB value
 		//point3 target = rec.p + rec.normal + random_unit_vector();	// non-exac
@@ -34,12 +41,15 @@ inline color render_color(const ray &r, const hittable &world, const unsigned in
 		ray scattered;
 		color attenuation;
 
-		if (m.c.scatter(r, rec, attenuation, scattered)) {
+		std::cout << "got to 3" << std::endl;
+		if (m->scatter(r, rec, attenuation, scattered)) {
+			std::cout << "got to 4" << std::endl;
 			return attenuation * render_color(scattered, world, iterations - 1, m);
 		}
 
 		return color(0,0,0);
 
+		std::cout << "got to 5" << std::endl;
 	}
 	return r.get_background_pixel();
 }
