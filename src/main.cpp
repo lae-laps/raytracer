@@ -31,19 +31,23 @@ int main() {
 
 	collection world;
 
-
-	auto material_ground = lambertian(color(0.8, 0.8, 0.0));
-	auto material_center = lambertian(color(0.7, 0.3, 0.3));
-	auto material_left   = metal(color(0.8, 0.8, 0.8));
-	auto material_right  = metal(color(0.8, 0.6, 0.2));
+	auto material_ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+	auto material_left   = make_shared<lambertian>(color(0.3, 0.3, 0.3));
+	auto material_center = make_shared<lambertian>(color(0.2, 0.2, 0.2));
+	auto material_right  = make_shared<metal>(color(0.5, 0.5, 0.5), 0.0);
 
 	world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
 	world.add(make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_center));
-	world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
-	world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
+	//world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
+	//world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
 
-	/*for (int m = 0; m < 150; m++) {
-		world.add(make_shared<sphere>(point3(random_val(-10, 10), random_val(-10, 10), random_val(-8, -60)), random_val(0.2, 4)));
+	/*for (int m = 0; m < 50; m++) {
+		
+		auto a = make_shared<metal>(color(random_val(), random_val(), random_val()));
+		auto b = make_shared<lambertian>(color(random_val(), random_val(), random_val()));
+
+		world.add(make_shared<sphere>(point3(random_val(-10, 10), random_val(-10, 10), random_val(-8, -60)), random_val(0.2, 4), a));
+		world.add(make_shared<sphere>(point3(random_val(-10, 10), random_val(-10, 10), random_val(-8, -60)), random_val(0.2, 4), b));
 	}*/
 
 	// set camera
@@ -56,17 +60,17 @@ int main() {
 
 	// render
 
-	std::cout << "got to 1" << std::endl;
-
 	for (unsigned int j = 0; j < HEIGHT; ++j) {
 		for (unsigned int i = 0; i < WIDTH; ++i) {
-			std::cout << "i: " << i << " | j: " << j << std::endl;
+
+			//std::cout << "i: " << i << " | j: " << j << std::endl;
+
 			color pixel(0, 0, 0);
 			for (unsigned int s = 0; s < samples_per_pixel; ++s) {
 				val u = (i + random_val()) / (WIDTH - 1);
 				val v = (j + random_val()) / (HEIGHT - 1);
 				ray r = cam.get_ray(u, v);
-				pixel += render_color(r, world, cycles, NULL);
+				pixel += render_color(r, world, cycles);
 			}
 			pixel = even_color(pixel);
 			val rgb[] = {pixel.x, pixel.y, pixel.z};

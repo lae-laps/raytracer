@@ -8,7 +8,6 @@
 
 #include "../ray/ray.hpp"
 #include "../math/math.hpp"
-#include "../objects/hit.hpp"
 #include "../utils/utils.hpp"
 #include "../objects/hittable/hittable.hpp"
 
@@ -18,38 +17,34 @@
 
 using std::shared_ptr;
 
-inline color render_color(const ray &r, const hittable &world, const unsigned int iterations, shared_ptr<material> m) {
-    hit rec;
+inline color render_color(const ray &r, const hittable &world, const unsigned int iterations) {
+    hit_record rec;
 
 	if (iterations <= 0) {
 		return color(0, 0, 0);
 	}
 
-	std::cout << "got to 1" << std::endl;
-
 	//material m;
 
-    if (world.hit(r, shadow_acne_threshold, infinity, rec, m)) {
-
-		std::cout << "got to 2" << std::endl;
+    if (world.hit(r, shadow_acne_threshold, infinity, rec)) {
 
 		//return 0.5 * (rec.normal + color(1,1,1));						// convert surface normal to RGB value
 		//point3 target = rec.p + rec.normal + random_unit_vector();	// non-exac
 		//point3 target = rec.p + random_in_hemisphere(rec.normal);		// real lambertian noise
 		//return 0.5 * render_color(ray(rec.p, target - rec.p), world, iterations - 1);
 
+
+
 		ray scattered;
 		color attenuation;
-
-		std::cout << "got to 3" << std::endl;
-		if (m->scatter(r, rec, attenuation, scattered)) {
-			std::cout << "got to 4" << std::endl;
-			return attenuation * render_color(scattered, world, iterations - 1, m);
+		if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+			return attenuation * render_color(scattered, world, iterations - 1);
 		}
-
 		return color(0,0,0);
 
-		std::cout << "got to 5" << std::endl;
+
+
+
 	}
 	return r.get_background_pixel();
 }

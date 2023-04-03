@@ -6,7 +6,6 @@
 #include <memory>
 #include <vector>
 
-#include "../hit.hpp"
 #include "../hittable/hittable.hpp"
 
 using std::shared_ptr;
@@ -22,7 +21,7 @@ class collection : public hittable {
 		void clear();
         void add(shared_ptr<hittable>);
 
-		virtual bool hit(const ray &r, const val t_min, const val t_max, class hit rec, shared_ptr<material>) const override;
+		virtual bool hit(const ray &r, const val t_min, const val t_max, hit_record &rec) const override;
 
 };
 

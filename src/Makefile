@@ -1,5 +1,6 @@
 CC = g++
 CFLAGS = -g -Wall
+#CFLAGS = -v -g -Wall -ftime-report 
 TARGET = main
 BUILDDIR = build/
 
