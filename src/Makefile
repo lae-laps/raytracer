@@ -38,5 +38,6 @@ metal.o:
 	$(CC) $(CFLAGS) -c materials/metal/metal.cpp -o $(BUILDDIR)metal.o
 
 clean:
-	$(RM) $(BUILDDIR)*.o $(TARGET)
+	$(RM) $(BUILDDIR)*.o 
+	$(RM) $(TARGET)
 

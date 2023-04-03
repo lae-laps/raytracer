@@ -1,5 +1,6 @@
 // Raytracer
 
+#include <chrono>
 #include <memory>
 #include <iostream>
 
@@ -20,8 +21,6 @@
 using std::make_shared;
 
 int main() {
-
-	std::cout << "Rendering" << std::endl;
 
 	// seed the random number generator
 	
@@ -59,8 +58,13 @@ int main() {
 	Filewriter image(WIDTH, HEIGHT, COLOR_DEPTH);
 
 	// render
+	
+	auto render_start_time = std::chrono::high_resolution_clock::now();
 
 	for (unsigned int j = 0; j < HEIGHT; ++j) {
+
+		update_progress_bar("+ Rendering", (val)(j) / HEIGHT);
+
 		for (unsigned int i = 0; i < WIDTH; ++i) {
 
 			//std::cout << "i: " << i << " | j: " << j << std::endl;
@@ -77,6 +81,22 @@ int main() {
 			image.set_pos(i, j, rgb);
 		}
 	}
+
+	update_progress_bar("* Rendered", 1.0);
+	std::cout << std::endl;
+
+	auto render_end_time = std::chrono::high_resolution_clock::now();
+	auto render_duration = std::chrono::duration_cast<std::chrono::milliseconds>(render_end_time - render_start_time);
+
+	auto t = render_duration.count();
+
+	std::cout << " * Rendered after " << t << " milliseconds";
+
+	if (t > 10000  ) std::cout << " ( " << (val)t / 1000	<< " seconds ) ";
+	if (t > 60000  ) std::cout << " ( " << (val)t / 60000	<< " minutes ) ";
+	if (t > 3600000) std::cout << " ( " << (val)t / 3600000 << " hours ) ";
+
+	std::cout << std::endl;
 
 	//image.debug_matrix(); 
 

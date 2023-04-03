@@ -13,16 +13,16 @@ const unsigned int max_spheres = 1024;
 
 const unsigned int COLOR_DEPTH = 255;
 
-const unsigned int WIDTH = 4096;
-const unsigned int HEIGHT = 2160;
+const unsigned int WIDTH = 1024;
+const unsigned int HEIGHT = 750;
 
 const val aspect_ratio = static_cast<val>(WIDTH) / static_cast<val>(HEIGHT);
 
 // render
 
-const unsigned int cycles = 4096;
+const unsigned int cycles = 256;
 
-const unsigned int samples_per_pixel = 50;
+const unsigned int samples_per_pixel = 20;
 
 const val shadow_acne_threshold = 0.001;		// threshhold for proximity to objects
 

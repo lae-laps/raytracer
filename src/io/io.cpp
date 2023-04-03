@@ -8,7 +8,7 @@
 #include <sys/ioctl.h>
 
 #define PROGRESS_BAR_FULL_CHAR "#"
-#define PROGRESS_BAR_HEADER_CHAR "#"
+#define PROGRESS_BAR_HEADER_CHAR "-"
 #define PROGRESS_BAR_EMPTY_CHAR "-"
 
 
@@ -58,19 +58,19 @@ unsigned int get_term_size() {
 #endif
 }
 
-void update_progress(const double progress) {
+void update_progress_bar(const std::string name, const val progress) {
 
 	unsigned int columns = get_term_size();
 
-	int barWidth = (columns - 9) / 2;
+	int barWidth = (columns - (10 + name.length())) / 2;
 
 	if (columns < 100) {
 		// if the terminal is extremely small, set full width
-		barWidth = columns - 9;
+		barWidth = columns - (10 + name.length());
 	}
 
 	std::cout.flush();
-	std::cout << " [";
+	std::cout << " " << name << " [";
 	int pos = barWidth * progress;
 	for (int i = 0; i < barWidth; ++i) {
 		if (i < pos) std::cout << PROGRESS_BAR_FULL_CHAR;
