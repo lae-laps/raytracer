@@ -3,11 +3,17 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
+#include <thread>
+
 // internals
 
 typedef double val;			// This enables changing between float and double later
 
 const unsigned int max_spheres = 1024;
+
+// optimizations
+
+const unsigned int RENDER_THREADS = std::thread::hardware_concurrency();
 
 // image
 
@@ -20,9 +26,9 @@ const val aspect_ratio = static_cast<val>(WIDTH) / static_cast<val>(HEIGHT);
 
 // render
 
-const unsigned int cycles = 256;
+const unsigned int cycles = 1024;
 
-const unsigned int samples_per_pixel = 20;
+const unsigned int samples_per_pixel = 30;
 
 const val shadow_acne_threshold = 0.001;		// threshhold for proximity to objects
 

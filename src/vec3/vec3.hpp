@@ -34,6 +34,8 @@ class vec3 {
 		bool near_zero() const;				// check if is in a range near to 0
 
 
+		// Old declaration -> implicit cache poisoning
+
 		inline static vec3 random() {
 			return vec3(random_val(), random_val(), random_val());
 		}
@@ -42,6 +44,16 @@ class vec3 {
 			return vec3(random_val(min, max), random_val(min, max), random_val(min, max));
 		}
 
+		/*inline static vec3 random(const val * &random_arr, unsigned int &random_arr_index) {
+			random_arr_index += 3;
+			return vec3(random_arr[random_arr_index + 1], random_arr[random_arr_index + 2], random_arr[random_arr_index + 3]);
+		}
+
+		inline static vec3 random(const val min, const val max, const val * &random_arr, unsigned int &random_arr_index) {
+			return vec3(min + (max - min) * random_arr[random_arr_index + 1],
+						min + (max - min) * random_arr[random_arr_index + 2],
+						min + (max - min) * random_arr[random_arr_index + 3]);
+		}*/
 };
 
 #endif

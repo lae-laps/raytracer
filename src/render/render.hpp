@@ -15,7 +15,7 @@
 #include "../materials/material/material.hpp"
 #include "../materials/lambertian/lambertian.hpp"
 
-using std::shared_ptr;
+//using std::shared_ptr;
 
 inline color render_color(const ray &r, const hittable &world, const unsigned int iterations) {
     hit_record rec;
