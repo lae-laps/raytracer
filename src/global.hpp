@@ -27,8 +27,8 @@ const val aspect_ratio = static_cast<val>(WIDTH) / static_cast<val>(HEIGHT);
 // render
 
 
-const unsigned int cycles = 1024;
-const unsigned int samples_per_pixel = 20;
+const unsigned int cycles = 10;
+const unsigned int samples_per_pixel = 1;
 
 const val shadow_acne_threshold = 0.001;		// threshhold for proximity to objects
 

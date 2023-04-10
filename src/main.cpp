@@ -73,14 +73,21 @@ int main() {
 	// create objects
 
 	
-	//collection world;
+	collection world;
 
-	collection world = random_scene();
+	auto material1 = make_shared<lambertian>(color(0.8, 0.8, 0.8));
+	auto material2 = make_shared<lambertian>(color(0.4, 0.4, 0.4));
+
+	world.add(make_shared<sphere>(point3(0, 0, -4), 1.5, material1));
+	world.add(make_shared<sphere>(point3(0, -51, -4), 100.0, material2));
+
+
+	//collection world = random_scene();
 	
 	// set camera
 	
-	//Camera cam(point3(-2,2,1), point3(0,0,-1), vec3(0,1,0), 2.0, aspect_ratio, true, 0.5);
-	Camera cam(point3(13,2,3), point3(0,0,0), vec3(0,1,0), 4.5, aspect_ratio, true, 0.08);
+	Camera cam(point3(0,0,1), point3(0,0,-4), vec3(0,1,0), 1.0, aspect_ratio, true, 0.4);
+	//Camera cam(point3(13,2,3), point3(0,0,0), vec3(0,1,0), 4.5, aspect_ratio, true, 0.08);
 	//Camera cam(point3(0,0,0), point3(0,0,-1), vec3(0,1,0), 4.5, aspect_ratio, false, 2.0);
 
 	// set filewriter handler to render image
