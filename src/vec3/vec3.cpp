@@ -44,7 +44,10 @@ vec3& vec3::operator/=(const vec3 &v) {
 }
 
 val vec3::length() const {
-	return std::sqrt(length_squared());
+	//return std::sqrt(length_squared());	-> This works but implies an extra function call
+	
+	return std::sqrt(x * x + y * y + z * z);
+
 }
 
 val vec3::length_squared() const {

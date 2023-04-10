@@ -57,6 +57,7 @@ int Filewriter::write_to_file(std::string path) {
 	file << generate_headers();		// write headers
 								
 	for (unsigned int i = 0; i < 3 * width * height; i++) {
+	//for (unsigned int i = 3 * width * height; i > 0; i--) {
 		/*if (i % 20 == 0) {
 			std::cerr << "\rprogress: " << i << ' ' << std::flush;
 		}*/

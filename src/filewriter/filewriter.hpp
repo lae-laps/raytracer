@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include "../global.hpp"
+
 class Filewriter {
 	private:
 		unsigned int *matrix;  // 3D array for rows, columns & RGB is compressed down into a 1D array
@@ -26,9 +28,9 @@ class Filewriter {
 
 		int write_to_file(std::string);
 
-		void set_pos(const int, const int, const double val[]);
-		void set_pos(const int, const int, const unsigned int val[]);
-		void set_pos(const int, const int, const int, const double);
+		void set_pos(const int, const int, const val n[]);
+		void set_pos(const int, const int, const unsigned int n[]);
+		void set_pos(const int, const int, const int, const val);
 		void set_pos(const int, const int, const int, const unsigned int);
 
 		void debug_matrix();

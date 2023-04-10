@@ -44,15 +44,12 @@ class vec3 {
 			return vec3(random_val(min, max), random_val(min, max), random_val(min, max));
 		}
 
-		/*inline static vec3 random(const val * &random_arr, unsigned int &random_arr_index) {
-			random_arr_index += 3;
-			return vec3(random_arr[random_arr_index + 1], random_arr[random_arr_index + 2], random_arr[random_arr_index + 3]);
+		/*inline static vec3 random() {
+			return vec3(0.5, 0.5, 0.5);
 		}
 
-		inline static vec3 random(const val min, const val max, const val * &random_arr, unsigned int &random_arr_index) {
-			return vec3(min + (max - min) * random_arr[random_arr_index + 1],
-						min + (max - min) * random_arr[random_arr_index + 2],
-						min + (max - min) * random_arr[random_arr_index + 3]);
+		inline static vec3 random(const val min, const val max) {
+			return vec3(0.5, 0.5, 0.5);
 		}*/
 };
 
@@ -132,7 +129,34 @@ inline vec3 random_in_hemisphere(const vec3& normal) {
 	}
 }
 
+inline vec3 random_in_unit_disk() {
+    while (true) {
+		auto p = vec3(random_val(-1,1), random_val(-1,1), 0);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
+
 inline vec3 reflect(const vec3 &v, const vec3 &normal) {
 	return v - 2 * dot(v, normal) * normal;					// calculate reflected vector using snells law
+}
+
+inline vec3 refract(const vec3 &v, const vec3 &n, const val r, const val cos_theta) {
+	// r = refractive index ratio -> eta(incidence) / eta(refracted)
+	
+	//auto cos_theta = fmin(dot(-uv, n), 1.0);
+
+	// we dont need to calculate cos theta as we would be calculating it for the 2nd time - instead we pass it as a parameter
+	
+	/*
+	val a = dot(-v, n);
+
+	val cos_theta = (a > 1.0) ? 1.0 : a;		// find the minimum
+	*/
+
+	vec3 r_out_perp = r * (v + cos_theta * n);
+	vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * n;
+	return r_out_perp + r_out_parallel;
+
 }
 

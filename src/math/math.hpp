@@ -12,7 +12,7 @@
 // constants
 
 const val pi = 3.1415926535897932385;
-const val infinity = std::numeric_limits<double>::infinity();
+const val infinity = std::numeric_limits<val>::infinity();
 
 // methods
 

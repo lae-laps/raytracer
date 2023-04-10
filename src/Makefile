@@ -4,8 +4,8 @@ CFLAGS = -g -Wall
 TARGET = main
 BUILDDIR = build/
 
-all: main.o collection.o io.o filewriter.o vec3.o ray.o sphere.o camera.o lambertian.o metal.o
-	$(CC) $(CFLAGS) -o $(TARGET) $(BUILDDIR)main.o $(BUILDDIR)collection.o $(BUILDDIR)io.o $(BUILDDIR)vec3.o $(BUILDDIR)ray.o $(BUILDDIR)sphere.o $(BUILDDIR)filewriter.o $(BUILDDIR)camera.o $(BUILDDIR)lambertian.o $(BUILDDIR)metal.o
+all: main.o collection.o io.o filewriter.o vec3.o ray.o sphere.o camera.o lambertian.o metal.o dielectric.o
+	$(CC) $(CFLAGS) -o $(TARGET) $(BUILDDIR)main.o $(BUILDDIR)collection.o $(BUILDDIR)io.o $(BUILDDIR)vec3.o $(BUILDDIR)ray.o $(BUILDDIR)sphere.o $(BUILDDIR)filewriter.o $(BUILDDIR)camera.o $(BUILDDIR)lambertian.o $(BUILDDIR)metal.o $(BUILDDIR)dielectric.o
 
 main.o:
 	$(CC) $(CFLAGS) -c main.cpp -o $(BUILDDIR)main.o
@@ -36,6 +36,9 @@ lambertian.o:
 
 metal.o:
 	$(CC) $(CFLAGS) -c materials/metal/metal.cpp -o $(BUILDDIR)metal.o
+
+dielectric.o:
+	$(CC) $(CFLAGS) -c materials/dielectric/dielectric.cpp -o $(BUILDDIR)dielectric.o
 
 clean:
 	$(RM) $(BUILDDIR)*.o 

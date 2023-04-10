@@ -3,7 +3,7 @@
 #include "collection.hpp"
 
 using std::shared_ptr;
-using std::make_shared;
+//using std::make_shared;
 
 collection::collection(shared_ptr<hittable> object) {
 	add(object);
@@ -17,7 +17,7 @@ void collection::add(shared_ptr<hittable> object) {
 	objects.push_back(object); 
 }
 
-bool collection::hit(const ray& r, double t_min, double t_max, hit_record &rec) const {
+bool collection::hit(const ray& r, val t_min, val t_max, hit_record &rec) const {
 	hit_record tmp;
     bool hit_anything = false;
     val closest = t_max;

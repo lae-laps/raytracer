@@ -17,7 +17,7 @@ class sphere : public hittable {
 
 		sphere() {}													// default constructor
 		//sphere(point3 b, val a, material n);						// data constructor
-		sphere(point3 cen, double r, shared_ptr<material> m): center(cen), radius(r), mat_ptr(m) {};
+		sphere(point3 cen, val r, shared_ptr<material> m): center(cen), radius(r), mat_ptr(m) {};
 																	
 		bool hit(const ray &r, const val t_min, const val t_max, hit_record &rec) const;
 

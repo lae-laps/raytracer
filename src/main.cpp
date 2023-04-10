@@ -16,9 +16,53 @@
 #include "objects/sphere/sphere.hpp"
 #include "materials/material/material.hpp"
 #include "objects/collection/collection.hpp"
+#include "materials/dielectric/dielectric.hpp"
 #include "materials/lambertian/lambertian.hpp"
 
 using std::make_shared;
+
+collection random_scene() {
+	collection world;
+
+	auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+	world.add(make_shared<sphere>(point3(0,-1000,0), 1000, ground_material));
+
+	for (int a = -11; a < 11; a++) {
+		for (int b = -11; b < 11; b++) {
+			auto choose_mat = random_val();
+			point3 center(a + 0.9 * random_val(), 0.2, b + 0.9 * random_val());
+
+			if ((center - point3(4, 0.2, 0)).length() > 0.9) {
+				shared_ptr<material> sphere_material;
+
+				if (choose_mat < 0.7) {
+					auto albedo = color::random() * color::random();
+					sphere_material = make_shared<lambertian>(albedo);
+					world.add(make_shared<sphere>(center, 0.2, sphere_material));
+				} else if (choose_mat < 0.85) {
+					auto albedo = color::random(0.5, 1);
+					auto fuzz = random_val(0, 0.5);
+					sphere_material = make_shared<metal>(albedo, fuzz);
+					world.add(make_shared<sphere>(center, 0.2, sphere_material));
+				} else {
+					sphere_material = make_shared<dielectric>(color(1.0, 1.0, 1.0), 1.5);
+					world.add(make_shared<sphere>(center, 0.2, sphere_material));
+				}
+			}
+		}
+	}
+
+	auto material1 = make_shared<dielectric>(color(1.0, 1.0, 1.0), 1.5);
+	world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+
+	auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+	world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+
+	auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+	world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
+	return world;
+}
 
 int main() {
 
@@ -28,30 +72,16 @@ int main() {
 
 	// create objects
 
-	collection world;
+	
+	//collection world;
 
-	auto material_ground = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-	auto material_left   = make_shared<lambertian>(color(0.3, 0.3, 0.3));
-	auto material_center = make_shared<lambertian>(color(0.2, 0.2, 0.2));
-	auto material_right  = make_shared<metal>(color(0.5, 0.5, 0.5), 0.0);
-
-	world.add(make_shared<sphere>(point3( 0.0, -100.5, -1.0), 100.0, material_ground));
-	world.add(make_shared<sphere>(point3( 0.0,    0.0, -1.0),   0.5, material_center));
-	//world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
-	//world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
-
-	/*for (int m = 0; m < 50; m++) {
-		
-		auto a = make_shared<metal>(color(random_val(), random_val(), random_val()));
-		auto b = make_shared<lambertian>(color(random_val(), random_val(), random_val()));
-
-		world.add(make_shared<sphere>(point3(random_val(-10, 10), random_val(-10, 10), random_val(-8, -60)), random_val(0.2, 4), a));
-		world.add(make_shared<sphere>(point3(random_val(-10, 10), random_val(-10, 10), random_val(-8, -60)), random_val(0.2, 4), b));
-	}*/
-
+	collection world = random_scene();
+	
 	// set camera
 	
-	Camera cam;
+	//Camera cam(point3(-2,2,1), point3(0,0,-1), vec3(0,1,0), 2.0, aspect_ratio, true, 0.5);
+	Camera cam(point3(13,2,3), point3(0,0,0), vec3(0,1,0), 4.5, aspect_ratio, true, 0.08);
+	//Camera cam(point3(0,0,0), point3(0,0,-1), vec3(0,1,0), 4.5, aspect_ratio, false, 2.0);
 
 	// set filewriter handler to render image
 
